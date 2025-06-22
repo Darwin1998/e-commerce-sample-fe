@@ -1,15 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export default function RegisterButton() {
-    const navigate = useNavigate();
-
     return (
-        <button
-            onClick={() => navigate('/register')}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
-        >
+        <Link to="/register" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
             Register
-        </button>
+        </Link>
     );
 }
