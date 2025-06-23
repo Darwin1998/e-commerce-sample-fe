@@ -15,7 +15,7 @@ export default function ProductDetail() {
     if (!product) return <div className="p-6">Loading...</div>;
     return (
         <div>
-            <Link to="/" className="text-indigo-600 hover:underline mb-4 block">← Back to Products</Link>
+            <Link to="/products" className="text-indigo-600 hover:underline mb-4 block">← Back to Products</Link>
             <div className="p-6 max-w-xl mx-auto">
                 <img src={product.image} alt={product.name} className="w-full h-64 object-cover rounded-xl mb-6" />
                 <h1 className="text-2xl font-bold mb-2">{product.name}</h1>

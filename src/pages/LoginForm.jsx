@@ -36,7 +36,7 @@ export default function LoginForm() {
             login(token); // ✅ Save token to context and localStorage
             console.log(res.data);
             toast.success('Login successful!');
-            navigate('/products'); // if using react-router
+            navigate('/'); // if using react-router
 
             setFormData({
                 email: '',
@@ -45,7 +45,7 @@ export default function LoginForm() {
 
         } catch (err) {
             console.log(err);
-            setErrors(er);
+            setErrors(err);
             // toast.error(err.response.data?.message);
         }
     };

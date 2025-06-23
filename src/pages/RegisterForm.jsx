@@ -45,7 +45,7 @@ export default function RegisterForm() {
                 },
             });
             toast.success( res.data.message );
-            navigate('/products');
+            navigate('/login');
             setFormData({
                 name: '',
                 email: '',

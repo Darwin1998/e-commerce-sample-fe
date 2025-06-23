@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 export default function RegisterButton() {
     return (
-        <Link to="/register" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        <Link to="/register"   className="text-gray-700 dark:text-gray-300 hover:text-blue-500 transition">
             Register
         </Link>
     );

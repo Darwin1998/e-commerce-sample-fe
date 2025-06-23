@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import api from '../../components/lib/api.js';
-import ProductCard from "../../components/product/ProductCard.jsx";
+import ProductCard from '../../components/product/ProductCard.jsx';
 
-export default function ProductList() {
+export default function ProductList({ previewLimit }) {
     const [products, setProducts] = useState([]);
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(null);
@@ -12,58 +12,67 @@ export default function ProductList() {
     const fetchProducts = async (pageNum = 1) => {
         if (loading) return;
         setLoading(true);
+
         try {
             const res = await api.get(`/v1/products/all?page=${pageNum}`);
             const { data, meta } = res.data;
 
             setProducts(prev => {
-                const existingIds = new Set(prev.map(p => p.id));
-                const newItems = data.filter(p => !existingIds.has(p.id));
-                return [...prev, ...newItems];
+                const existing = new Set(prev.map(p => p.id));
+                const unique = data.filter(p => !existing.has(p.id));
+                return [...prev, ...unique];
             });
 
             setPage(meta.current_page);
             setLastPage(meta.last_page);
-        } catch (err) {
-            console.error('API error:', err);
+        } catch (e) {
+            console.error('API error:', e);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
+        // On mount, fetch first page
         fetchProducts(1);
     }, []);
 
     useEffect(() => {
+        if (previewLimit) return; // disable infinite scroll in preview mode
+
         const observer = new IntersectionObserver(
             entries => {
-                const first = entries[0];
-                if (first.isIntersecting && !loading && page < lastPage) {
+                if (entries[0].isIntersecting && !loading && page < lastPage) {
                     fetchProducts(page + 1);
                 }
             },
             { threshold: 1 }
         );
 
-        const currentLoader = loaderRef.current;
-        if (currentLoader) observer.observe(currentLoader);
-
+        if (loaderRef.current) observer.observe(loaderRef.current);
         return () => {
-            if (currentLoader) observer.unobserve(currentLoader);
+            if (loaderRef.current) observer.unobserve(loaderRef.current);
         };
-    }, [page, lastPage, loading]);
+    }, [page, lastPage, loading, previewLimit]);
+
+    const displayProducts = previewLimit
+        ? products.slice(0, previewLimit)
+        : products;
 
     return (
         <>
             <div className="p-6 mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map(product => (
-                    <ProductCard key={product.id} product={product} />
+                {displayProducts.map(p => (
+                    <ProductCard key={p.id} product={p} />
                 ))}
             </div>
-            <div ref={loaderRef} className="text-center my-6">
-                {loading ? <p>Loading...</p> : page >= lastPage && <p>No more products.</p>}
-            </div>
+
+            {/* Show loader only if not in preview mode */}
+            {!previewLimit && (
+                <div ref={loaderRef} className="text-center my-6">
+                    {loading ? <p>Loading...</p> : page >= lastPage && <p>No more products.</p>}
+                </div>
+            )}
         </>
     );
 }
