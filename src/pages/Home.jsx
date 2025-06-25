@@ -8,7 +8,7 @@ export default function Home() {
     return (
         <div>
             {/* Hero Section */}
-            <section className="bg-green-500 dark:bg-green-800 text-white py-20">
+            <section className="bg-green-500 dark:bg-green-800 text-white py-56 relative left-1/2 right-1/2 -mx-[50vw] w-screen">
                 <div className="max-w-5xl mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">
                         Welcome to ShoppaJobaa
